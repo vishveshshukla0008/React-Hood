@@ -1,77 +1,74 @@
-import { useState, useEffect } from "react";
-import { ProductCard } from "./components/ProductCard";
-export default function App() {
-  const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+import React, { useEffect, useState } from "react";
 
-  const fetchData = async () => {
+const App = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState("");
+  const [showResults, setShowResults] = useState(false);
+
+  async function fetchData() {
     try {
-      const data = await fetch("https://dummyjson.com/products?limit=500");
+      const data = await fetch(
+        "https://dummyjson.com/recipes/search?q=" + search,
+      );
       const result = await data.json();
-      setProducts(result.products);
+      setRecipes(result?.recipes);
     } catch (error) {
-      console.log("error in fetching response !", error);
-      alert("Cannot load data !");
+      // alert("API fetch error !");
+      console.log(error);
     }
-  };
-  const PAGE_SIZE = 10;
-  const totalProducts = products?.length;
-  const no_of_pages = Math.ceil(totalProducts / PAGE_SIZE);
+  }
 
-  const start = currentPage * PAGE_SIZE;
-  const end = currentPage * 10 + PAGE_SIZE;
+  function throttle(fn, delay) {
+    let lastCall = 0; // check for last call !
+    return function (...args) {
+      const now = Date.now(); // find current date !
+      if (now - lastCall < delay) {
+        return;
+      }
+      lastCall = now;
+      return fn(...args);
+    };
+  }
 
+  console.log(recipes);
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [search]);
 
-  function getPreviousPage() {
-    setCurrentPage((prev) => prev - 1);
+  function debounce(fn, delay) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
   }
 
-  function getNextPage() {
-    setCurrentPage((prev) => prev + 1);
-  }
-
-  return products.length === 0 ? (
-    <h1>No Products Founded !</h1>
-  ) : (
-    <div className="App px-20 py-10">
-      <p className="text-center font-bold text-3xl">Pagination basics !</p>
-      <div className="pagination-controls w-full font-bold my-5 flex gap-3 justify-center">
-        <button
-          onClick={getPreviousPage}
-          disabled={currentPage === 1}
-          className="disabled:opacity-50 disabled:cursor-not-allowed border py-1 px-2 rounded-md cursor-pointer">
-          ▶️
-        </button>{" "}
-        {[...Array(no_of_pages)].map((_, index) => (
-          <button
-            onClick={() => setCurrentPage(index + 1)}
-            className={`border py-1 px-2 rounded-md cursor-pointer ${currentPage == index + 1 ? "bg-green-200" : ""}`}
-            key={index}>
-            {index + 1}
-          </button>
-        ))}
-        <button
-          onClick={getNextPage}
-          disabled={currentPage === no_of_pages}
-          className="disabled:opacity-50 disabled:cursor-not-allowed border py-1 px-2 rounded-md cursor-pointer">
-          ▶️
-        </button>
+  return (
+    <div className="h-screen p-10 w-full bg-slate-950 text-white flex flex-col items-center gap-3">
+      <div className="">
+        <input
+          className="placeholder:text-white/50 w-80 p-4 border border-white rounded-md"
+          type="text"
+          name="search"
+          placeholder="search here"
+          onChange={debounce((e) => setSearch(e.target.value), 2000)}
+          onFocus={() => setShowResults(true)}
+          onBlur={() => setShowResults(false)}
+        />
       </div>
-      <div className="products-wrapper grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-3">
-        {products.slice(start, end).map((product) => {
-          return (
-            <ProductCard
-              key={product.id}
-              image={product.images[0]}
-              title={product.title}
-              price={product.price}
-            />
-          );
-        })}
-      </div>
+      {showResults && (
+        <div className="max-h-200 border p-5  flex flex-col text-left  overflow-scroll scrollbar-none">
+          {recipes.map((el) => (
+            <span key={el.id} className="cursor-pointer hover:bg-slate-700 p-1">
+              {el.name}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default App;
