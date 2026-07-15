@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "name": "public",
+    "isFolder": true
+  },
+  {
+    "id": 2,
+    "name": "src",
+    "isFolder": true,
+    "children": [
+      {
+        "id": 3,
+        "name": "components",
+        "isFolder": true,
+        "children": [
+          {
+            "id": 4,
+            "name": "Navbar.jsx",
+            "isFolder": false
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "shared",
+        "isFolder": true,
+        "children": [
+          {
+            "id": 6,
+            "name": "Button.jsx",
+            "isFolder": false
+          },
+          {
+            "id": 7,
+            "name": "Input.jsx",
+            "isFolder": false
+          },
+          {
+            "id": 8,
+            "name": "ui",
+            "isFolder": true,
+            "children": [
+              {
+                "id": 9,
+                "name": "Skeleton.jsx",
+                "isFolder": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "name": "App.jsx",
+        "isFolder": false
+      },
+      {
+        "id": 11,
+        "name": "main.jsx",
+        "isFolder": false
+      },
+      {
+        "id": 12,
+        "name": "index.css",
+        "isFolder": false
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "index.html",
+    "isFolder": false
+  },
+  {
+    "id": 14,
+    "name": "package.json",
+    "isFolder": false
+  },
+  {
+    "id": 15,
+    "name": "package-lock.json",
+    "isFolder": false
+  },
+  {
+    "id": 16,
+    "name": "README.md",
+    "isFolder": false
+  }
+]
